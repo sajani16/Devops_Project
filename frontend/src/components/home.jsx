@@ -9,7 +9,7 @@ function Home() {
           real ingredients. No fluff.
         </p>
         <button className="bg-white text-orange-500 px-6 py-3 rounded font-semibold hover:bg-orange-100 transition">
-          Explore Recipes Explore Recipes
+          Explore Recipes Explore Recipes Explore Recipes
         </button>
       </section>
 
