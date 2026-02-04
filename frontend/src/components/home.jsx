@@ -3,9 +3,10 @@ function Home() {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="bg-orange-500 text-white text-center py-24 px-4">
-        <h1 className="text-5xl font-bold mb-4">RecipeHub</h1>
+        <h1 className="text-5xl font-bold mb-4">RecipeHub </h1>
         <p className="text-lg mb-6">
-          Simple recipes with real ingredients. No fluff.
+          Simple recipes with real ingredients. No fluff. Simple recipes with
+          real ingredients. No fluff.
         </p>
         <button className="bg-white text-orange-500 px-6 py-3 rounded font-semibold hover:bg-orange-100 transition">
           Explore Recipes

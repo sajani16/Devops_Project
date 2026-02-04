@@ -1,10 +1,16 @@
+# Stage 1: build React app with Vite
 FROM node:20-alpine AS build
 WORKDIR /app
+
+# Install dependencies
 COPY package.json package-lock.json ./
 RUN npm install
+
+# Copy source code and build
 COPY . .
 RUN npm run build
 
+# Stage 2: serve with Nginx
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
