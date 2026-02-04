@@ -22,20 +22,32 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                dir('frontend') {   
-                    bat 'npm ci'
+                dir('frontend') {
+                    
+                    bat 'npm install --include=dev'
                 }
             }
         }
 
-        stage('Deploy') {
+        stage('Build React App') {
             steps {
                 dir('frontend') {
-                    // Example deployment: copy all files to a deployment folder
+                    
+                    bat 'set NODE_ENV=production'
+                }
+            }
+        }
+
+        stage('Verify Build Output') {
+            steps {
+                dir('frontend') {
                     bat '''
-                    if not exist ..\\deploy mkdir ..\\deploy
-                    xcopy /E /I /Y * ..\\deploy\\
-                    echo Files deployed to deploy folder
+                    if exist dist (
+                        echo Build folder exists
+                    ) else (
+                        echo Build failed
+                        exit 1
+                    )
                     '''
                 }
             }
@@ -43,7 +55,7 @@ pipeline {
 
         stage('Success') {
             steps {
-                bat 'echo React CI pipeline up to deploy completed successfully'
+                bat 'echo React CI pipeline completed successfully'
             }
         }
     }
