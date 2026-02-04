@@ -22,28 +22,32 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-        dir('frontend') {   
-            bat 'npm install'
-        }
-    }
+                dir('frontend') {   
+                    bat 'npm install'
+                }
+            }
         }
 
         stage('Build React App') {
             steps {
-                bat 'npm run build'
+                dir('frontend') {   // <-- build must run in frontend folder
+                    bat 'npm run build'
+                }
             }
         }
 
         stage('Verify Build Output') {
             steps {
-                bat '''
-                if exist build (
-                    echo Build folder exists
-                ) else (
-                    echo Build failed
-                    exit 1
-                )
-                '''
+                dir('frontend') {   // <-- verify build folder also in frontend
+                    bat '''
+                    if exist build (
+                        echo Build folder exists
+                    ) else (
+                        echo Build failed
+                        exit 1
+                    )
+                    '''
+                }
             }
         }
 
