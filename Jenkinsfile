@@ -28,13 +28,13 @@ pipeline {
             }
         }
 
-        stage('Build React App') {
-            steps {
-                dir('frontend') {   // <-- build must run in frontend folder
-                    bat 'npm run build'
-                }
-            }
-        }
+        // stage('Build React App') {
+        //     steps {
+        //         dir('frontend') {   // <-- build must run in frontend folder
+        //             bat 'npm run build'
+        //         }
+        //     }
+        // }
 
         stage('Verify Build Output') {
             steps {
