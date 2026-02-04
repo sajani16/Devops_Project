@@ -22,8 +22,10 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'npm install'
-            }
+        dir('frontend') {   
+            bat 'npm install'
+        }
+    }
         }
 
         stage('Build React App') {
