@@ -2,14 +2,14 @@ pipeline {
     agent any
 
     environment {
-        NODE_ENV = 'production'
+        IMAGE_NAME = "react-frontend"
+        CONTAINER_NAME = "react-frontend-container"
     }
 
-  triggers {
-        // Poll SCM every 5 minutes (you can adjust the schedule)
+    triggers {
         pollSCM('H/5 * * * *')
     }
-    
+
     stages {
 
         stage('Checkout Code') {
@@ -18,49 +18,50 @@ pipeline {
             }
         }
 
-        stage('Verify Node & NPM') {
+        stage('Verify Docker') {
             steps {
-                bat 'node --version'
-                bat 'npm --version'
+                bat 'docker --version'
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                dir('frontend') {
-                    
-                    bat 'npm install --include=dev'
-                }
-            }
-        }
-
-        stage('Build React App') {
-            steps {
-                dir('frontend') {
-                    
-                    bat 'set NODE_ENV=production'
-                }
-            }
-        }
-
-        stage('Verify Build Output') {
+        stage('Build Docker Image') {
             steps {
                 dir('frontend') {
                     bat '''
-                    if exist dist (
-                        echo Build folder exists
-                    ) else (
-                        echo Build failed
-                        exit 1
-                    )
+                    docker build -t %IMAGE_NAME% .
                     '''
                 }
             }
         }
 
+        stage('Stop Old Container') {
+            steps {
+                bat '''
+                docker stop %CONTAINER_NAME% || exit 0
+                docker rm %CONTAINER_NAME% || exit 0
+                '''
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                bat '''
+                docker run -d -p 3000:80 --name %CONTAINER_NAME% %IMAGE_NAME%
+                '''
+            }
+        }
+
+        stage('Verify Container') {
+            steps {
+                bat '''
+                docker ps | findstr %CONTAINER_NAME%
+                '''
+            }
+        }
+
         stage('Success') {
             steps {
-                bat 'echo React CI pipeline completed successfully'
+                echo 'Docker image built and container deployed successfully'
             }
         }
     }
