@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "react-frontend"
-        CONTAINER_NAME = "react-frontend-container"
+        IMAGE_NAME = "frontend"
+        CONTAINER_NAME = "frontend-container"
     }
 
     triggers {
