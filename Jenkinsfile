@@ -24,44 +24,22 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+         stage('Stop Existing Containers') {
             steps {
-                dir('frontend') {
-                    bat '''
-                    docker build -t %IMAGE_NAME% .
-                    '''
-                }
+                sh 'docker compose down || true'
             }
         }
 
-        stage('Stop Old Container') {
+
+     stage('Build Containers') {
             steps {
-                bat '''
-                docker stop %CONTAINER_NAME% || exit 0
-                docker rm %CONTAINER_NAME% || exit 0
-                '''
+                sh 'docker compose build'
             }
         }
 
-        stage('Run Container') {
+        stage('Run Containers') {
             steps {
-                bat '''
-                docker run -d -p 3000:80 --name %CONTAINER_NAME% %IMAGE_NAME%
-                '''
-            }
-        }
-
-        stage('Verify Container') {
-            steps {
-                bat '''
-                docker ps | findstr %CONTAINER_NAME%
-                '''
-            }
-        }
-
-        stage('Success') {
-            steps {
-                echo 'Docker image built and container deployed successfully'
+                sh 'docker compose up -d'
             }
         }
     }
